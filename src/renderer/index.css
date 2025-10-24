@@ -6,6 +6,7 @@
   --primary-color: #3b82f6;
   --secondary-color: #1e40af;
   --accent-color: #60a5fa;
+  --primary-rgb: 59, 130, 246;
 }
 
 body {
@@ -23,15 +24,32 @@ body {
   overflow: hidden;
 }
 
-.bg-primary { background-color: var(--primary-color); }
-.text-primary { color: var(--primary-color); }
-.border-primary { border-color: var(--primary-color); }
-.from-primary { --tw-gradient-from: var(--primary-color); }
-.to-secondary { --tw-gradient-to: var(--secondary-color); }
-.bg-primary\/10 { background-color: rgba(59, 130, 246, 0.1); }
-.bg-primary\/20 { background-color: rgba(59, 130, 246, 0.2); }
-.bg-primary\/5 { background-color: rgba(59, 130, 246, 0.05); }
-.hover\:bg-primary\/20:hover { background-color: rgba(59, 130, 246, 0.2); }
-.hover\:bg-primary\/30:hover { background-color: rgba(59, 130, 246, 0.3); }
-.ring-primary\/30 { --tw-ring-color: rgba(59, 130, 246, 0.3); }
+/* Dynamic theme classes */
+.bg-primary { background-color: var(--primary-color) !important; }
+.text-primary { color: var(--primary-color) !important; }
+.border-primary { border-color: var(--primary-color) !important; }
+
+.from-primary { 
+  --tw-gradient-from: var(--primary-color) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, transparent) !important;
+}
+
+.to-secondary { 
+  --tw-gradient-to: var(--secondary-color) !important; 
+}
+
+.bg-primary\/10 { background-color: rgba(var(--primary-rgb), 0.1) !important; }
+.bg-primary\/20 { background-color: rgba(var(--primary-rgb), 0.2) !important; }
+.bg-primary\/5 { background-color: rgba(var(--primary-rgb), 0.05) !important; }
+.hover\:bg-primary\/20:hover { background-color: rgba(var(--primary-rgb), 0.2) !important; }
+.hover\:bg-primary\/30:hover { background-color: rgba(var(--primary-rgb), 0.3) !important; }
+.ring-primary\/30 { --tw-ring-color: rgba(var(--primary-rgb), 0.3) !important; }
 .border-t-transparent { border-top-color: transparent; }
+
+.focus-within\:ring-primary\/30:focus-within {
+  --tw-ring-color: rgba(var(--primary-rgb), 0.3) !important;
+}
+
+.focus\:border-primary:focus {
+  border-color: var(--primary-color) !important;
+}

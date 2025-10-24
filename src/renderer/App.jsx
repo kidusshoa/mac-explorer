@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft, ChevronRight, Home, Search, FolderPlus, FilePlus,
   Copy, Trash2, Edit3, Scissors, ClipboardPaste, Settings as SettingsIcon,
-  Folder, File, Image as ImageIcon, FileText, Music, Video, Archive
+  Folder, FolderOpen, File, Image as ImageIcon, FileText, Music, Video, 
+  Archive, FileCode, Film, Headphones, Package
 } from 'lucide-react';
 import Settings from './components/Settings';
 import ImageViewer from './components/ImageViewer';
+import CreateModal from './components/CreateModal';
 
 function App() {
   const [currentPath, setCurrentPath] = useState('');
@@ -22,6 +24,7 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [imageViewer, setImageViewer] = useState(null);
   const [renaming, setRenaming] = useState(null);
+  const [createModal, setCreateModal] = useState({ isOpen: false, type: null });
 
   useEffect(() => {
     const loadHomeDir = async () => {
@@ -199,50 +202,75 @@ function App() {
     }
   };
 
-  const handleCreateFolder = async () => {
-    const name = prompt('Folder name:');
-    if (name) {
-      try {
-        await window.electronAPI.createFolder(currentPath, name);
-        loadDirectory(currentPath);
-      } catch (error) {
-        console.error('Create folder failed:', error);
-      }
-    }
+  const handleCreateFolder = () => {
+    setCreateModal({ isOpen: true, type: 'folder' });
   };
 
-  const handleCreateFile = async () => {
-    const name = prompt('File name:');
-    if (name) {
-      try {
+  const handleCreateFile = () => {
+    setCreateModal({ isOpen: true, type: 'file' });
+  };
+
+  const handleCreateConfirm = async (name) => {
+    try {
+      if (createModal.type === 'folder') {
+        await window.electronAPI.createFolder(currentPath, name);
+      } else {
         await window.electronAPI.createFile(currentPath, name);
-        loadDirectory(currentPath);
-      } catch (error) {
-        console.error('Create file failed:', error);
       }
+      loadDirectory(currentPath);
+      setCreateModal({ isOpen: false, type: null });
+    } catch (error) {
+      console.error('Create failed:', error);
     }
   };
 
   const getFileIcon = (file) => {
-    if (file.isDirectory) return <Folder className="w-5 h-5 text-yellow-500" />;
+    if (file.isDirectory) {
+      return (
+        <div className="relative">
+          <Folder className="w-6 h-6 text-amber-400" fill="currentColor" />
+        </div>
+      );
+    }
     
     const ext = file.name.split('.').pop().toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(ext)) {
-      return <ImageIcon className="w-5 h-5 text-purple-500" />;
+    
+    // Images
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg', 'ico'].includes(ext)) {
+      return <ImageIcon className="w-5 h-5 text-purple-500" strokeWidth={2} />;
     }
-    if (['mp3', 'wav', 'flac', 'aac'].includes(ext)) {
-      return <Music className="w-5 h-5 text-pink-500" />;
+    
+    // Audio
+    if (['mp3', 'wav', 'flac', 'aac', 'ogg', 'm4a'].includes(ext)) {
+      return <Headphones className="w-5 h-5 text-pink-500" strokeWidth={2} />;
     }
-    if (['mp4', 'avi', 'mkv', 'mov'].includes(ext)) {
-      return <Video className="w-5 h-5 text-red-500" />;
+    
+    // Video
+    if (['mp4', 'avi', 'mkv', 'mov', 'wmv', 'flv', 'webm'].includes(ext)) {
+      return <Film className="w-5 h-5 text-red-500" strokeWidth={2} />;
     }
-    if (['zip', 'rar', 'tar', 'gz', '7z'].includes(ext)) {
-      return <Archive className="w-5 h-5 text-orange-500" />;
+    
+    // Archives
+    if (['zip', 'rar', 'tar', 'gz', '7z', 'bz2', 'xz'].includes(ext)) {
+      return <Archive className="w-5 h-5 text-orange-500" strokeWidth={2} />;
     }
-    if (['txt', 'md', 'pdf', 'doc', 'docx'].includes(ext)) {
-      return <FileText className="w-5 h-5 text-blue-500" />;
+    
+    // Code files
+    if (['js', 'jsx', 'ts', 'tsx', 'py', 'java', 'cpp', 'c', 'h', 'go', 'rs', 'rb', 'php', 'html', 'css', 'scss', 'json', 'xml', 'yaml', 'yml'].includes(ext)) {
+      return <FileCode className="w-5 h-5 text-emerald-500" strokeWidth={2} />;
     }
-    return <File className="w-5 h-5 text-gray-500" />;
+    
+    // Documents
+    if (['txt', 'md', 'pdf', 'doc', 'docx', 'rtf', 'odt'].includes(ext)) {
+      return <FileText className="w-5 h-5 text-blue-500" strokeWidth={2} />;
+    }
+    
+    // Packages
+    if (['dmg', 'pkg', 'app', 'exe', 'msi', 'deb', 'rpm'].includes(ext)) {
+      return <Package className="w-5 h-5 text-indigo-500" strokeWidth={2} />;
+    }
+    
+    return <File className="w-5 h-5 text-gray-400" strokeWidth={2} />;
   };
 
   const formatFileSize = (bytes) => {
@@ -542,6 +570,14 @@ function App() {
       {imageViewer && (
         <ImageViewer imagePath={imageViewer} onClose={() => setImageViewer(null)} />
       )}
+
+      {/* Create Modal */}
+      <CreateModal
+        isOpen={createModal.isOpen}
+        type={createModal.type}
+        onClose={() => setCreateModal({ isOpen: false, type: null })}
+        onConfirm={handleCreateConfirm}
+      />
     </div>
   );
 }

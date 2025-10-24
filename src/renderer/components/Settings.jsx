@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Settings as SettingsIcon, X, Palette } from 'lucide-react';
 
 const themes = [
-  { name: 'Ocean Blue', primary: '#3b82f6', secondary: '#1e40af', accent: '#60a5fa' },
-  { name: 'Forest Green', primary: '#10b981', secondary: '#065f46', accent: '#34d399' },
-  { name: 'Sunset Orange', primary: '#f97316', secondary: '#c2410c', accent: '#fb923c' },
-  { name: 'Purple Dream', primary: '#a855f7', secondary: '#6b21a8', accent: '#c084fc' },
-  { name: 'Rose Pink', primary: '#ec4899', secondary: '#9f1239', accent: '#f472b6' },
-  { name: 'Slate Gray', primary: '#64748b', secondary: '#334155', accent: '#94a3b8' },
+  { name: 'Ocean Blue', primary: '#3b82f6', secondary: '#1e40af', accent: '#60a5fa', rgb: '59, 130, 246' },
+  { name: 'Forest Green', primary: '#10b981', secondary: '#065f46', accent: '#34d399', rgb: '16, 185, 129' },
+  { name: 'Sunset Orange', primary: '#f97316', secondary: '#c2410c', accent: '#fb923c', rgb: '249, 115, 22' },
+  { name: 'Purple Dream', primary: '#a855f7', secondary: '#6b21a8', accent: '#c084fc', rgb: '168, 85, 247' },
+  { name: 'Rose Pink', primary: '#ec4899', secondary: '#9f1239', accent: '#f472b6', rgb: '236, 72, 153' },
+  { name: 'Slate Gray', primary: '#64748b', secondary: '#334155', accent: '#94a3b8', rgb: '100, 116, 139' },
 ];
 
 function Settings({ isOpen, onClose }) {
@@ -31,6 +31,7 @@ function Settings({ isOpen, onClose }) {
     document.documentElement.style.setProperty('--primary-color', theme.primary);
     document.documentElement.style.setProperty('--secondary-color', theme.secondary);
     document.documentElement.style.setProperty('--accent-color', theme.accent);
+    document.documentElement.style.setProperty('--primary-rgb', theme.rgb);
   };
 
   const handleThemeChange = async (theme) => {
