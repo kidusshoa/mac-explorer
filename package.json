@@ -35,6 +35,7 @@
     "files": [
       "dist/**/*",
       "main.js",
+      "preload.js",
       "src/main/**/*"
     ],
     "mac": {
