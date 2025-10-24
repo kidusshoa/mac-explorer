@@ -1,9 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
-const Store = require('electron-store');
 
-const store = new Store();
+let store;
 let mainWindow;
 
 function createWindow() {
@@ -26,7 +25,10 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  const Store = (await import('electron-store')).default;
+  store = new Store();
+  
   createWindow();
 
   app.on('activate', () => {

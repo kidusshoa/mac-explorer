@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
     "dev:vite": "vite",
-    "dev:electron": "wait-on http://localhost:5173 && electron .",
+    "dev:electron": "wait-on http://localhost:5173 && NODE_ENV=development electron .",
     "build": "vite build",
     "build:mac": "npm run build && electron-builder --mac",
     "preview": "vite preview",
@@ -43,6 +43,7 @@
     }
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.16",
     "@vitejs/plugin-react": "^5.1.0",
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.1",
